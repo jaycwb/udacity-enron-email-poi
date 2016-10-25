@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc69c6c6-af71-452d-910c-6e00f1f3591f" name="Default" comment="" />
+    <list default="true" id="dc69c6c6-af71-452d-910c-6e00f1f3591f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/report.pdf" afterPath="$PROJECT_DIR$/report/report.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/report.synctex.gz" afterPath="$PROJECT_DIR$/report/report.synctex.gz" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/my_classifier.pkl" afterPath="$PROJECT_DIR$/my_classifier.pkl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/poi_id.py" afterPath="$PROJECT_DIR$/poi_id.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/report.aux" afterPath="$PROJECT_DIR$/report/report.aux" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/report.log" afterPath="$PROJECT_DIR$/report/report.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/report/report.tex" afterPath="$PROJECT_DIR$/report/report.tex" />
+    </list>
     <ignored path="udacity-enron-email-poi.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -13,8 +22,8 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/udacity-enron-email-poi$tester.coverage" NAME="tester Coverage Results" MODIFIED="1477400173965" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/udacity-enron-email-poi$poi_id.coverage" NAME="poi_id Coverage Results" MODIFIED="1477400168840" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/udacity-enron-email-poi$tester.coverage" NAME="tester Coverage Results" MODIFIED="1477427025237" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/udacity-enron-email-poi$poi_id.coverage" NAME="poi_id Coverage Results" MODIFIED="1477427018772" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -28,8 +37,8 @@
       <file leaf-file-name="poi_id.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/poi_id.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="201" column="18" selection-start-line="201" selection-start-column="18" selection-end-line="201" selection-end-column="18" />
+            <state relative-caret-position="342">
+              <caret line="381" column="37" selection-start-line="381" selection-start-column="37" selection-end-line="381" selection-end-column="37" />
               <folding>
                 <element signature="e#19#29#0" expanded="true" />
               </folding>
@@ -96,8 +105,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -404,7 +413,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1676" height="1027" extended-state="0" />
+    <frame x="4" y="23" width="1676" height="1027" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1789976" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -450,11 +459,47 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="76" />
+      <option name="time" value="91" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/poi_id.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#19#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/sklearn/feature_selection/univariate_selection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6615">
+          <caret line="453" column="76" selection-start-line="453" selection-start-column="15" selection-end-line="453" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/poi_id.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#19#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Python/2.7/site-packages/sklearn/feature_selection/univariate_selection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6615">
+          <caret line="453" column="76" selection-start-line="453" selection-start-column="15" selection-end-line="453" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/poi_id.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -723,8 +768,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/poi_id.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="201" column="18" selection-start-line="201" selection-start-column="18" selection-end-line="201" selection-end-column="18" />
+        <state relative-caret-position="342">
+          <caret line="381" column="37" selection-start-line="381" selection-start-column="37" selection-end-line="381" selection-end-column="37" />
           <folding>
             <element signature="e#19#29#0" expanded="true" />
           </folding>

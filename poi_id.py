@@ -35,6 +35,12 @@ from sklearn.model_selection import GridSearchCV
 ########################
 
 def getBasicInfo(my_dataset):
+    """Computes basic information about the data set, including
+    Total number of instances
+    Total number of POIs
+    Total number of NaNs in the data set
+    and the features
+    """
     totalInstances = 0
     numberOfNaNs = 0
     numberPOI = 0
@@ -57,6 +63,10 @@ def getBasicInfo(my_dataset):
 ##########
 
 def tuneClassifier(classifier, X, Y):
+    """Tunes the classifier given the data set (X,Y)
+    Depending on the classifier type, the tuning itself
+    is delegated to one of the tuning methods
+    """
     if type(classifier) is SGDClassifier:
         return tuneSGD(X, Y)
     if type(classifier) is GaussianNB:
@@ -70,7 +80,9 @@ def tuneKNN(X, Y):
     # values from k ranging 1 to 20
     #manhattan, euclidian and l_3 norm
     kValues = [i for i in range(1, 21)] #[1, 3, 5, 7, 9]
-    parameters = {'n_neighbors': kValues, 'p': [1, 2, 3], 'algorithm': ['brute']}
+    parameters = {'n_neighbors': kValues,
+                  'p': [1, 2, 3],
+                  'algorithm': ['brute']}
     grid = GridSearchCV(estimator=KNeighborsClassifier(), param_grid=parameters,
                         n_jobs=N_THREADS_FOR_TUNING, cv=FOLDS_FOR_TUNING,
                         scoring=METRIC_FOR_TUNING)
@@ -80,7 +92,8 @@ def tuneKNN(X, Y):
     return (bestEstimator, bestScore)
 
 def tuneSGD(X,Y):
-    parameters = {'loss': ['hinge', 'log', 'squared_hinge', 'perceptron'], 'penalty': ['l1', 'l2', 'elasticnet']}
+    parameters = {'loss': ['hinge', 'log', 'squared_hinge', 'perceptron'],
+                  'penalty': ['l1', 'l2', 'elasticnet']}
     grid = GridSearchCV(estimator=SGDClassifier(), param_grid=parameters,
                         n_jobs = N_THREADS_FOR_TUNING, cv=FOLDS_FOR_TUNING,
                         scoring=METRIC_FOR_TUNING)
@@ -114,12 +127,18 @@ def tuneDecisionTree(X, Y):
 ############################
 
 def addFeatures(my_dataset):
+    """Creates two new attributes and appends it
+    to the data set
+    """
     # the new attributes
     newFeatures = ['total_asset', 'fraction_of_messages_with_poi']
     # asset-related variables
-    assets = ['salary', 'bonus', 'total_stock_value', 'exercised_stock_options']
+    assets = ['salary', 'bonus',
+              'total_stock_value',
+              'exercised_stock_options']
     # message-related variables
-    messages = ['to_messages', 'from_messages', 'from_poi_to_this_person', 'from_this_person_to_poi']
+    messages = ['to_messages', 'from_messages',
+                'from_poi_to_this_person', 'from_this_person_to_poi']
     for name, features in my_dataset.items():
         validAssetFeature = True
         validMessageFeature = True
@@ -142,8 +161,10 @@ def addFeatures(my_dataset):
         #### TESTING NOW FOR MESSAGE FEATURE
         if validMessageFeature:
             # computes the ratio between POI messages and all messages
-            all_messages = features['to_messages'] + features['from_messages']
-            messages_with_poi = features['from_poi_to_this_person'] + features['from_this_person_to_poi']
+            all_messages = features['to_messages'] + \
+                           features['from_messages']
+            messages_with_poi = features['from_poi_to_this_person'] + \
+                                features['from_this_person_to_poi']
             if all_messages > 0:
                 features[newFeatures[1]] = float(messages_with_poi) / all_messages
             else:
@@ -157,9 +178,15 @@ def addFeatures(my_dataset):
 # FEATURE SELECTION #
 #####################
 
-# I did here a wrapper-like approach, where k features are incrementally selected given their chi^2 score,
-# and the best result for the evaluated metric in k \in [1;10] is picked for a given classifier
+# I did here a wrapper-like approach, where k features are
+# incrementally selected given their chi^2 score,
+# and the best result for the evaluated metric
+# in k \in [1;10] is picked for a given classifier
 def selectAttributes(X, Y):
+    """Performs feature selection over the data set (X,Y)
+    using SelectKBest method. K is selected by maximizing
+    the F1-Weighted metric.
+    """
     from sklearn.feature_selection import SelectKBest
     from sklearn.feature_selection import chi2
     from sklearn.feature_selection import SelectFpr
@@ -171,14 +198,17 @@ def selectAttributes(X, Y):
         scoresAfterSelection = propsSelection.scores_
         indicesOfSelectedAttributes = numpy.argpartition(scoresAfterSelection, i)[-i:]
         Xselected = SelectKBest(k=i).fit_transform(X, Y)
-        score = cross_val_score(GaussianNB(), Xselected, Y, cv=FOLDS_FOR_TUNING, scoring=METRIC_FOR_TUNING)
+        score = cross_val_score(GaussianNB(), Xselected, Y,
+                                cv=FOLDS_FOR_TUNING, scoring=METRIC_FOR_TUNING)
         _, bestScore, _, _ = bestScoreProps
         avgScore = numpy.average(score)
         if avgScore > bestScore:
-            bestScoreProps = (i, avgScore, indicesOfSelectedAttributes, Xselected)
+            bestScoreProps = (i, avgScore,
+                              indicesOfSelectedAttributes, Xselected)
 
     bestK, bestScore, selectedFeatures, Xnew = bestScoreProps
-    print '\t Best result was n=%d with a %.3f score and the selected features were ' % (bestK, bestScore), selectedFeatures
+    print '\t Best result was n=%d with a %.3f score ' \
+          'and the selected features were ' % (bestK, bestScore), selectedFeatures
     return (selectedFeatures, Xnew)
 
 
@@ -188,6 +218,10 @@ def selectAttributes(X, Y):
 ##################
 
 def cleanData(X):
+    """Performs a high-level cleansing of the data set.
+    This method replaces all NaN data with zeroes and
+    all negative values by their absolute value.
+    """
     # Replaces all NaNs in the dataset with a 0
     # and replaces all negative values into their absolute ones
     for key, line in X.items():
@@ -201,6 +235,10 @@ def cleanData(X):
 # DATA RESCALING #
 ##################
 def rescaleData(X):
+    """ Rescales the data set using MinMaxScaler.
+    Please see the report or the scikit-learn documentation
+    for details.
+    """
     from sklearn import preprocessing
     scaler = preprocessing.MinMaxScaler()
     X = scaler.fit_transform(X)
@@ -211,9 +249,14 @@ def rescaleData(X):
 ############
 
 def removeOutliers(dataset):
-
-    # The first thing done is to remove the TOTAL line, which is the sum
-    # of all others and is not really a representative example for training
+    """Removes clear outliers, i.e. TOTAL and
+    THE TRAVEL AGENCY IN THE PARK and all instances
+    if more than 95% of its values are NaNs
+    """
+    # The first thing done is to remove the
+    # TOTAL line, which is the sum
+    # of all others and is not really a
+    # representative example for training
     print '\t Removing TOTAL...'
     dataset.pop('TOTAL', 0)
     print '\t Removing THE TRAVEL AGENCY IN THE PARK...'
@@ -261,10 +304,14 @@ with open('final_project_dataset.pkl', 'r') as data_file:
 features_list = [ #label
                  'poi',
                  # financial attributes (all in US dollars)
-                 'salary', 'deferral_payments', 'total_payments', 'loan_advances', 'bonus',
-                 'restricted_stock_deferred', 'deferred_income', 'total_stock_value', 'expenses',
-                 'exercised_stock_options', 'other', 'long_term_incentive', 'restricted_stock', 'director_fees',
-                 # email attributes (number of email messages, with the exception of email_address, which is a string)
+                 'salary', 'deferral_payments', 'total_payments',
+                 'loan_advances', 'bonus',
+                 'restricted_stock_deferred', 'deferred_income',
+                 'total_stock_value', 'expenses',
+                 'exercised_stock_options', 'other',
+                 'long_term_incentive', 'restricted_stock', 'director_fees',
+                 # email attributes (number of email messages,
+                 # with the exception of email_address, which is a string)
                  'to_messages', #'email_address',
                  'from_poi_to_this_person', 'from_messages', 'from_this_person_to_poi',
                  'shared_receipt_with_poi']
@@ -279,7 +326,8 @@ totalInstances, numberPOI, numberFeatures = getBasicInfo(my_dataset)
 print '\t Number of instances = %d' % totalInstances
 print '\t Number of POIs = %d' % numberPOI
 print '\t Number of features = %d' % numberFeatures
-print '\t Ratio of POIs and non POIs = (%.2f, %.2f)' % (float(numberPOI)/totalInstances, float(totalInstances-numberPOI)/totalInstances)
+print '\t Ratio of POIs and non POIs = (%.2f, %.2f)' % \
+      (float(numberPOI)/totalInstances, float(totalInstances-numberPOI)/totalInstances)
 
 
 ### Task 3: Create new feature(s)
@@ -321,6 +369,10 @@ print 'Performing automatic feature selection...'
 
 indicesFeaturesSelected, features = selectAttributes(features, labels)
 
+
+### Flag for appending the new attributes regardless of the selection
+shouldAppendNewAttributes = False
+
 keysFeatures = []
 for v in my_dataset.values()[0]:
     if v != 'poi':
@@ -329,18 +381,24 @@ for v in my_dataset.values()[0]:
 #pops all features that were not selected from my_dataset and from features_list
 for i in range(0, len(keysFeatures)):
     if i not in indicesFeaturesSelected:
-        for _, v in my_dataset.iteritems():
-            del v[keysFeatures[i]]
+        if not (shouldAppendNewAttributes and keysFeatures[i] in newFeatures):
+            for _, v in my_dataset.iteritems():
+                del v[keysFeatures[i]]
 
 for i in range(0, len(keysFeatures)):
     if i not in indicesFeaturesSelected:
         f = keysFeatures[i]
-        if f in features_list:
-            features_list.remove(f)
-
+        if not (shouldAppendNewAttributes and f in newFeatures):
+            if f in features_list:
+                features_list.remove(f)
 #prints the selected attributes
 print '\t\t Final set of attributes = ', features_list
 
+
+### Repeats the extraction and the scaling
+data = featureFormat(my_dataset, features_list, sort_keys=True)
+labels, features = targetFeatureSplit(data)
+features = rescaleData(features)
 
 ### Task 4: Try a variety of classifiers
 ### Please name your classifier clf for easy export below.
@@ -353,15 +411,18 @@ print 'Tuning classifiers...'
 classifiers = [('GaussianNB', GaussianNB())]
                #('SGD', SGDClassifier())]
                #('KNN', KNeighborsClassifier())]
-               # ('Decision Tree', DecisionTreeClassifier())]
+               #('Decision Tree', DecisionTreeClassifier())]
 avgScores = []
 
 for name, classifier in classifiers:
     print '\tTuning', name, '...'
     tunedClassifier, tunedScore = tuneClassifier(classifier, features, labels)
-    scores = cross_val_score(tunedClassifier, features, labels, cv=FOLDS_FOR_TUNING, scoring=METRIC_FOR_TUNING)
+    scores = cross_val_score(tunedClassifier, features,
+                             labels, cv=FOLDS_FOR_TUNING,
+                             scoring=METRIC_FOR_TUNING)
     #print '\t', name, '- All %s scores obtained = ' % METRIC_FOR_TUNING, scores
-    print '\t\t Avg %s: %0.3f (+/- %0.3f)' % (METRIC_FOR_TUNING, scores.mean(), scores.std() * 2)
+    print '\t\t Avg %s: %0.3f (+/- %0.3f)' % \
+          (METRIC_FOR_TUNING, scores.mean(), scores.std() * 2)
     print '\t\t Tuned score obtained was = %0.3f' % tunedScore
     avgScores.append((name, tunedClassifier, scores.mean(), scores.std()))
 

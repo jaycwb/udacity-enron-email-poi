@@ -5,6 +5,7 @@
 \usepackage{multicol}
 \usepackage{graphicx}
 \usepackage{url}
+\usepackage{todonotes}
 
 \begin{document}
 \title{Identify Fraud from Enron Email}
@@ -47,11 +48,11 @@
 		The first is simple the sum of all the assets of an instance, i.e. ``salary'', ``bonus'', ``total\_stock\_value'' and ``exercised\_stock\_options'', while the second is the ratio between messages to and from a POI and all the messages.
 	
 	
-	
 	\subsection{Feature selection}
 		The proposed method for feature selection was to maximize the F1-Weighted\footnote{F1-Weighted was used in replacement of F1 since the dataset is unbalanced.} metric of the selected subset of features given each classifier.
 		In practice, this is mix between a step-wise and a wrapper-like approach, where attributes are selected sequentially (using SelectKBest) and evaluated using different classifiers.
-		This is due that different classifiers work differently with different attributes.
+		Using SelectKBest, features are selected regardind their direct correlation to the class.
+		The evaluation using different classifiers is due that different classifiers work differently with different attributes.
 		Table \ref{tab:selectedFeatures} presents the selected features for each classifier.
 
 		\begin{table*}[!t]
@@ -85,8 +86,9 @@
 	
 	\subsection{Data scaling}
 
+		Since not all attributes are bounded in the same interval, e.g. most of the e-mail related attributes have a range which is much smaller than the asset ones that might scale way higher, data scaling is needed to make sure that all features have the same weight.
 		The procedure adopted for data scaling was simple, which is also the rule of thumb for many books and papers on machine learning.
-		The MinMaxScaler from SKLEARN was used to transform features into the $[0;1]$ interval.
+		The MinMaxScaler from scikit-learn was used to transform features into the $[0;1]$ interval.
 		The transformation of an attribute $X$ was done as follows:
 		\begin{displaymath}
 			\sigma_X = \frac{(X - \min{X})}{\max{X} - \min{X}}
@@ -95,6 +97,9 @@
 			X_{scaled} = \sigma_X \times (\max{X} - \min{X}) + \min{X}
 		\end{displaymath}
 		
+		Scaling is also important since many learning algorithms, e.g. SGD, Gaussian NB, assume that the data distribution follows a Gaussian distribution.
+		Even though the same does not hold for $k$NN, scaling is also important to avoid that too great distances jeopardize distance computations, since a single feature may ``dominate'' the overall distance computation.
+		Also, decision tree is able to work with unscaled data, but data scaling was also applied to ease the comparison of the results against the other classifiers.		
 		
 \section{Results} \label{sec:results}
 
@@ -103,9 +108,15 @@
 
 	\subsection{Classifier tuning}
 	
-		Table \ref{tab:tuningParams} presents the algorithms evaluated and the parameters tuned.
-		The tuning of these classifiers was performed using a 10-fold cross validation, where the evaluation metric is a F1-Weighted.
+	
+		When applying learning algorithms to different domains, classifiers are likely to act differently.
+		Even though researchers try to provide reasonable default parameters, there is no ``one-fits-all''\footnote{Usually referred as the no free lunch theorem.} set of parameters that will succeed in all scenarios.
+		Classifier tuning is a step in the machine learning evaluation that compares several different combinations of parameters with the goal of achieving higher classification rates\footnote{In certain scenarios, such as stream processing, the goal could also be to find a fair trade-off between accuracy, processing time and memory usage.}.
+		Tuning is in practice a search problem, and thus, many different strategies can be applied to find a fair subset of parameters that maximizes your goal measure.
+		In the performed experiments, tuning was performed using a brute force strategy, where all possible combinations of parameters were evaluated with the goal of maximizing the F1-Weighted measure in a 10-fold cross-validation scheme.
 		F1-Weighted is a variation of the conventional F1 measure (which is an harmonic mean between the precision and recall) that accounts for instances of each class differently since the problem is unbalanced.
+	
+		Table \ref{tab:tuningParams} presents the algorithms evaluated and the parameters tuned.
 		
 
 	\begin{table*}[!t]
@@ -132,39 +143,54 @@
 
 	\subsection{Data set variations}
 	
-		The tuned classifiers are finally compared against one another in three variations of the Enron data set:
+		The tuned classifiers are finally compared against one another in four variations of the Enron data set:
 		\begin{itemize}
 			\item (Original) The original data set, rescaled and without outliers
 			\item (New Atts) Original + new attributes
 			\item (Selected) New Atts + Feature selection
+			\item (Selected + New) Selected + new attributes
 		\end{itemize}
 		
 		These variations will allows a better understanding to the results obtained, since evaluations on how each classifier performs with and without the new attributes and/or feature selection will be possible.
+		It is important to highlight that the last variation is used solely to verify the impact of the newly proposed attributes in the results obtained.
 
 
-	\subsection{Final evaluation}
-
-		
+	\subsection{Overall evaluation}
+	
+		Validation is one of the most important parts of building and deploying applied machine learning techniques.
+		The goal of validation is to verify whether a classifier will predict well when applied in real-world scenarios.
+		The rationale behind most of the validation schemes is that the training set and test sets are different, however, built upon the same data generator\footnote{The same does not hold for streaming settings.}.
+		Holdout is one of the most simple yet used validation schemes.
+		It splits the data set into two disjoint subsets: training and test.
+		A classifier is then built using the training set and applied to the test set.
+		Even though holdout looks interesting, the test set could be extremely equal or different from the training set, and thus, highly over-fitted or under-fitted results could be obtained.
+		To avoid this issue, a 10-fold cross-validation was applied, where a holdout validation was repeated 10 times and the resulting average  is reported.
+		Evaluating classifiers using cross-validation is beneficial since it assesses the variability of the results, since it is possible that during one of these folds, classifiers will obtain results that largely deviate from the mean, a fact that should be verified and analyzed.
+		It is also worth mentioning that the same procedure was used during feature selection.
+						
 		Tables \ref{tab:accuracy}, \ref{tab:precision} and \ref{tab:recall} present the results obtained by the tuned classifiers in terms of Accuracy, Precision and Recall, respectively.
 
-	\begin{table*}[!t]
-		\centering
-		\caption{Average accuracy (\%) obtained in the test script.}
-		\resizebox{.7\textwidth}{!}{
-		\begin{tabular}{rcccc}
-			\hline
-			\multicolumn{5}{c}{Accuracy (\%)}\\
-			\hline
-			Data set & Gaussian NB & $k$NN & SGD & Decision Tree \\
-			\hline
-			Original & 37.62 & \textbf{87.53} & \textbf{77.35} & 79.87\\
-			New Atts & 37.71 & 86.00 & 62.73 & \textbf{80.75} \\
-			Selected & \textbf{90.41} & 84.94 & 70.33 & 76.00\\ 
-			\hline
-		\end{tabular}
-		}
-		\label{tab:accuracy}
-	\end{table*}
+
+		\begin{table*}[!t]
+			\centering
+			\caption{Average accuracy (\%) obtained in the test script.}
+			\resizebox{.7\textwidth}{!}{
+			\begin{tabular}{rcccc}
+				\hline
+				\multicolumn{5}{c}{Accuracy (\%)}\\
+				\hline
+				Data set & Gaussian NB & $k$NN & SGD & Decision Tree \\
+				\hline
+				Original & 37.62 & \textbf{87.53} & \textbf{77.35} & 79.87\\
+				New Atts & 37.71 & 86.00 & 62.73 & \textbf{80.75} \\
+				Selected & \textbf{90.41} & 84.94 & 70.33 & 76.00\\ 
+				Selected + New & 83.29 & 82.16 & 55.07 & 78.29 \\
+				\hline
+			\end{tabular}
+			}
+			\label{tab:accuracy}
+		\end{table*}
+	
 	
 		Verifying the results obtained in accuracy (Table \ref{tab:accuracy}), it is important to highlight that most of the results obtained are below the ZeroR baseline of 88\%, with the exception of the Gaussian Naive Bayes in the Selected data set.
 		Another interesting result that should be highlighted is the accuracy increase obtained by the same classifier amongst the data set variations, where the accuracy went from approximately 38\% to 90\%.
@@ -188,7 +214,9 @@
 		Therefore, both precision and recall should be maximized.		
 		
 		According to the results obtained in Tables \ref{tab:precision} and \ref{tab:recall}, the only classifier able to achieve precision and recall results above 0.3 is the Gaussian Naive Bayes in the selected data set.
-
+		In practice, the results obtained for this combination of classifier and data set shows that it is possible to state that 50\% of the instances flagged as POI by the classifier are really POIs (precision), while 32\% of the POI instances are correctly classified as a POI.
+		Again, it is highlighted the last variation of the dataset, which regards the selected features plus the newly generated attributes.
+		Focusing on the Gaussian NB results, precision presents an increase of $0.04$ while recall decreases by $0.59$.
 
 		\begin{table*}[!t]
 			\centering
@@ -202,7 +230,8 @@
 				\hline
 				Original & 0.16 & \textbf{0.57} & 0.06 & 0.26 \\
 				New Atts & 0.16 & 0.42 & 0.09 & \textbf{0.29} \\
-				Selected & \textbf{0.46} & 0.40 & \textbf{0.12} &  0.16 \\ 
+				Selected & 0.46 & 0.40 & 0.12 &  0.16 \\ 
+				Selected + New & \textbf{0.50} & 0.34 & \textbf{0.13} & 0.26 \\
 				\hline
 			\end{tabular}
 			}
@@ -220,8 +249,9 @@
 				Data set & Gaussian NB & $k$NN & SGD & Decision Tree \\
 				\hline
 				Original & \textbf{0.83} & \textbf{0.27} & 0.04 & 0.28 \\
-				New Atts & \textbf{0.83} & 0.13 & \textbf{0.19} & \textbf{0.31} \\
-				Selected & 0.32 & 0.10 & \textbf{0.19} & 0.17 \\ 
+				New Atts & \textbf{0.83} & 0.13 & 0.19 & \textbf{0.31} \\
+				Selected & 0.32 & 0.10 & 0.19 & 0.17 \\ 
+				Selected + New & 0.24 & 0.26 & \textbf{0.29} & 0.28 \\
 				\hline
 			\end{tabular}
 			}
@@ -229,9 +259,4 @@
 			
 		\end{table*}
 	
-
-
 \end{document}
-
-
-
