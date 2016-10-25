@@ -196,6 +196,8 @@ def selectAttributes(X, Y):
     for i in range(1, len(X[0])):
         propsSelection = SelectKBest(k=i).fit(X, Y)
         scoresAfterSelection = propsSelection.scores_
+        if i == len(X[0]):
+            print propsSelection.scores_
         indicesOfSelectedAttributes = numpy.argpartition(scoresAfterSelection, i)[-i:]
         Xselected = SelectKBest(k=i).fit_transform(X, Y)
         score = cross_val_score(GaussianNB(), Xselected, Y,
@@ -339,8 +341,8 @@ features_list += newFeatures
 #     print key, value
 
 # getting the features' names in the sequence they are stored in memory
-# for feature in my_dataset.values()[0]:
-#     print feature
+for feature in my_dataset.values()[0]:
+    print feature
 
 
 ### Task 2: Remove outliers
