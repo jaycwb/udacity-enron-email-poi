@@ -193,7 +193,8 @@ def selectAttributes(X, Y):
     # stores the best K, Score, the features selected as a list of strings
     # and the reduced dimensionality problem
     bestScoreProps = (0, 0.0, [], None)
-    for i in range(1, len(X[0])):
+    kMax = len(X[0])
+    for i in range(1, kMax):
         propsSelection = SelectKBest(k=i).fit(X, Y)
         scoresAfterSelection = propsSelection.scores_
         if i == len(X[0]):

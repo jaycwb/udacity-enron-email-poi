@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  25 OCT 2016 20:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  26 OCT 2016 16:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -429,29 +429,29 @@ Overfull \hbox (2.87631pt too wide) in paragraph at lines 52--57
  []
 
 
-Overfull \hbox (7.09627pt too wide) in paragraph at lines 78--79
-[]\OT1/cmr/m/n/10.95 Table 2[] presents the fea-ture scores ob-tained us-ing the Se-lec-tKBest method. 
+Overfull \hbox (7.09627pt too wide) in paragraph at lines 78--80
+[]\OT1/cmr/m/n/10.95 Table 2[] presents the fea-ture scores ob-tained us-ing the Se-lec-tKBest method,
  []
 
-[2] [3] [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 248--249
-
- []
-
-[7] [8] (./report.aux) ) 
+[2] <kBestResults.png, id=22, 834.9594pt x 510.2262pt>
+File: kBestResults.png Graphic file (type png)
+ <use kBestResults.png>
+Package pdftex.def Info: kBestResults.png used on input line 118.
+(pdftex.def)             Requested size: 834.95735pt x 510.22495pt.
+ [3] [4 <./kBestResults.png>] [5] [6] [7] [8] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 12539 strings out of 493117
- 250982 string characters out of 6135433
- 298062 words of memory out of 5000000
- 15744 multiletter control sequences out of 15000+600000
+ 12549 strings out of 493117
+ 251141 string characters out of 6135433
+ 296088 words of memory out of 5000000
+ 15752 multiletter control sequences out of 15000+600000
  9891 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,15n,56p,794b,290s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on report.pdf (8 pages, 154438 bytes).
+Output written on report.pdf (8 pages, 234715 bytes).
 PDF statistics:
- 82 PDF objects out of 1000 (max. 8388607)
- 59 compressed objects within 1 object stream
+ 85 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

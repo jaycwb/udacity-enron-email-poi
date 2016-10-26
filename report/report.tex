@@ -75,43 +75,31 @@
 			\label{tab:selectedFeatures}
 		\end{table*}
 		
-		Table \ref{tab:featureScores} presents the feature scores obtained using the SelectKBest method.
+		Table \ref{tab:featureScores} presents the feature scores obtained using the SelectKBest method, while Figure \ref{fig:kVersusMetrics} shows the Precision, Recall and F1 metrics obtained by varying the $k$ parameter using the Gaussian NB classifier in the SelectKBest algorithm.
+		In practice, the only $k$ parameter that achieves the required precision and recall results above $0.3$ is $k=1$, yet, $k=14$ achieves the best overall F1 measure, which is the harmonic mean between precision and recall (see Equation \ref{eq:f1} in Section \ref{sec:overallEvaluation}).
 		
 		\begin{table*}
-			\caption{Features scores.}
+			\caption{Features scores. Bold faced features represent the newly generated attributes.}
 			\begin{center}			
 			\begin{tabular}{rl}
 				\hline
 				Feature & Score \\
 				\hline
-				to\_messages & 18.28968404 \\
-deferral\_payments				& 0.23309098\\
-expenses				& 8.77277773\\
-deferred\_income				& 7.18405566\\
-long\_term\_incentive				& 20.79225205\\
-restricted\_stock\_deferred				& 0.24705326\\
-shared\_receipt\_with\_poi				& 11.45847658\\
-loan\_advances						& 24.17997245\\
-from\_messages				& 6.09417331\\
-other						& 24.81507973\\     
-director\_fees		& 4.18747751\\
-bonus					& 9.92218601\\
-total\_stock\_value		& 8.82867901\\
-from\_poi\_to\_this\_person			& 2.1263278\\
-fraction\_of\_messages\_with\_poi                & 1.64634113\\
-from\_this\_person\_to\_poi						& 5.24344971  \\
-restricted\_stock					& 0.16970095\\
-salary	& 2.38261211\\
-total\_payments				& 8.58942073\\
-exercised\_stock\_options				& 15.36927686 \\  
-total\_asset				& 5.39937029\\
-
+				exercised\_stock\_options & 24.81507973\\				total\_stock\_value & 24.17997245\\				bonus & 20.79225205\\				salary & 18.28968404\\				\textbf{total\_asset} & \textbf{15.36927686}\\				deferred\_income & 11.45847658\\				long\_term\_incentive & 9.92218601\\				restricted\_stock & 8.82867901\\				total\_payments & 8.77277773\\				shared\_receipt\_with\_poi & 8.58942073\\				loan\_advances & 7.18405566\\				expenses & 6.09417331\\				\textbf{fraction\_of\_messages\_with\_poi} & \textbf{5.39937029}\\				from\_poi\_to\_this\_person & 5.24344971\\				other & 4.18747751\\				from\_this\_person\_to\_poi & 2.38261211\\				director\_fees & 2.1263278\\				to\_messages & 1.64634113\\				restricted\_stock\_deferred & 0.24705326\\				deferral\_payments & 0.23309098\\				from\_messages & 0.16970095\\
 			   	\hline
 			\end{tabular}
 			\end{center}			
 			\label{tab:featureScores}
 		\end{table*}
-			
+
+		\begin{figure}
+			\resizebox{\textwidth}{!}{
+				\includegraphics{kBestResults}
+			}
+			\caption{Results obtained by varying the $k$ parameter in SelectKBest algorithm.}
+			\label{fig:kVersusMetrics}
+		\end{figure}
+
 	\subsection{Outlier detection and data cleansing}
 	
 		If one looks at the PDF provided, which was used to create the data set, he will see that two instances, namely ``TOTAL'' and ``THE TRAVEL AGENCY IN THE PARK'' have a very distinct behavior.
@@ -151,7 +139,7 @@ total\_asset				& 5.39937029\\
 		Classifier tuning is a step in the machine learning evaluation that compares several different combinations of parameters with the goal of achieving higher classification rates\footnote{In certain scenarios, such as stream processing, the goal could also be to find a fair trade-off between accuracy, processing time and memory usage.}.
 		Tuning is in practice a search problem, and thus, many different strategies can be applied to find a fair subset of parameters that maximizes your goal measure.
 		In the performed experiments, tuning was performed using a brute force strategy, where all possible combinations of parameters were evaluated with the goal of maximizing the F1-Weighted measure in a 10-fold cross-validation scheme.
-		F1-Weighted is a variation of the conventional F1 measure (which is an harmonic mean between the precision and recall) that accounts for instances of each class differently since the problem is unbalanced.
+		F1-Weighted is a variation of the conventional F1 measure (which is an harmonic mean between the precision and recall and is stated in Equation \ref{eq:f1}) that accounts for instances of each class differently since the problem is unbalanced.
 	
 		Table \ref{tab:tuningParams} presents the algorithms evaluated and the parameters tuned.
 		
@@ -192,7 +180,7 @@ total\_asset				& 5.39937029\\
 		It is important to highlight that the last variation is used solely to verify the impact of the newly proposed attributes in the results obtained.
 
 
-	\subsection{Overall evaluation}
+	\subsection{Overall evaluation} \label{sec:overallEvaluation}
 	
 		Validation is one of the most important parts of building and deploying applied machine learning techniques.
 		The goal of validation is to verify whether a classifier will predict well when applied in real-world scenarios.
@@ -245,7 +233,12 @@ total\_asset				& 5.39937029\\
 		\begin{equation}
 			Recall = \frac{tp}{tp + fn}
 			\label{eq:recall}
-		\end{equation} \\
+		\end{equation}
+		
+		\begin{equation}
+			F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+			\label{eq:f1}
+		\end{equation}
 
 		High precision results relates to a low false positive rate (not many false POIs detected), while an high recall relates to a low false negative rate (not many false non-POIs detected).
 		Therefore, both precision and recall should be maximized.		
